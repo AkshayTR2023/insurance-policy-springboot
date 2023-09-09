@@ -23,52 +23,52 @@ import io.github.resilience4j.retry.annotation.Retry;
 @FeignClient(name = "policy-category-service")
 public interface PolicyCategoryServiceProxy {
 
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForAddCategory")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForAddCategory")
     @PostMapping(value = "/category", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     PolicyCategory addCategory(@RequestBody PolicyCategory category);
 
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForUpdateCategory")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForUpdateCategory")
 	@PutMapping(value = "/category/update-name/{categoryId}/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<PolicyCategory> updateCategoryName(@PathVariable("categoryId")Long categoryId, @PathVariable("name") String categoryName);
 
 	
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForAddPolicy")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForAddPolicy")
 	@PutMapping(value = "/category/{categoryId}/add-policy-id/{policyId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<PolicyCategory> addPolicyIdToCategory(@PathVariable("categoryId")Long categoryId, @PathVariable("policyId")Long policyId);
 
 	
 	
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForRemovePolicy")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForRemovePolicy")
 	@DeleteMapping("/category/remove-policy/{policyId}")
 	ResponseEntity<String> removePolicyIdFromCategories(@PathVariable Long policyId);
 
 	
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetAllCategories")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForGetAllCategories")
     @GetMapping(value = "/category", produces = MediaType.APPLICATION_JSON_VALUE)
     List<PolicyCategory> getAllCategories();
 
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetAllCategoriesByNameLike")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForGetAllCategoriesByNameLike")
     @GetMapping(value = "/category/name-like/{namePhrase}", produces = MediaType.APPLICATION_JSON_VALUE)
     List<PolicyCategory> getAllCategoriesByNameLike(@PathVariable("namePhrase") String namePhrase);
 
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetCategoryById")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForGetCategoryById")
     @GetMapping(value = "/category/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<PolicyCategory> getCategoryById(@PathVariable("categoryId") Long categoryId);
 
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetCategoryByName")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForGetCategoryByName")
     @GetMapping(value = "/category/name/{categoryName}", produces = MediaType.APPLICATION_JSON_VALUE)
     PolicyCategory getCategoryByName(@PathVariable("categoryName") String categoryName);
 
-	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForDeleteCategoryById")
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForDeleteCategoryById")
     @DeleteMapping(value = "/category/{categoryId}")
     void deleteCategoryById(@PathVariable("categoryId") Long categoryId);
 	
@@ -78,7 +78,7 @@ public interface PolicyCategoryServiceProxy {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("Exception: => " + cause.toString());
+    	System.out.println("Exception: => " + cause.toString());
         return new PolicyCategory(0L, "Default Category", Collections.emptyList());
     }
 
@@ -86,7 +86,7 @@ public interface PolicyCategoryServiceProxy {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("Exception: => " + cause.getMessage());
+    	System.out.println("Exception: => " + cause.getMessage());
         return new ResponseEntity<>(new PolicyCategory(0L, "Default Category", Collections.emptyList()),HttpStatus.OK);
     }
    
@@ -94,23 +94,23 @@ public interface PolicyCategoryServiceProxy {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("categoryId: "+categoryId+ " poilcyId: "+policyId);
-    	System.err.println("Exception: => " + cause.getMessage());
+    	System.out.println("categoryId: "+categoryId+ " poilcyId: "+policyId);
+    	System.out.println("Exception: => " + cause.getMessage());
         return new ResponseEntity<>(new PolicyCategory(0L, "Default Category", Collections.emptyList()),HttpStatus.OK);
     }
     public default  ResponseEntity<String> fallbackForRemovePolicy(Long policyId, Throwable cause) {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("poilcyId: "+policyId);
-    	System.err.println("Exception: => " + cause.getMessage());
+    	System.out.println("poilcyId: "+policyId);
+    	System.out.println("Exception: => " + cause.getMessage());
         return new ResponseEntity<>("Fallback",HttpStatus.OK);
     }
     public default List<PolicyCategory> fallbackForGetAllCategories(Throwable cause) {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("Exception: => " + cause.getMessage());
+    	System.out.println("Exception: => " + cause.getMessage());
         return Collections.emptyList();
     }
 
@@ -119,7 +119,7 @@ public interface PolicyCategoryServiceProxy {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("Exception: => " + cause.getMessage());
+    	System.out.println("Exception: => " + cause.getMessage());
         return Collections.emptyList();
     }
 
@@ -128,7 +128,7 @@ public interface PolicyCategoryServiceProxy {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("Exception: => " + cause.getMessage());
+    	System.out.println("Exception: => " + cause.getMessage());
     	 return new ResponseEntity<>(new PolicyCategory(categoryId, "Default Category", Collections.emptyList()),HttpStatus.OK);
     }
 
@@ -137,7 +137,7 @@ public interface PolicyCategoryServiceProxy {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("Exception: => " + cause.getMessage());
+    	System.out.println("Exception: => " + cause.getMessage());
         return new PolicyCategory(0L, categoryName, Collections.emptyList());
     }
 
@@ -146,7 +146,7 @@ public interface PolicyCategoryServiceProxy {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
         }
-    	System.err.println("Exception: => " + cause.getMessage());
+    	System.out.println("Exception: => " + cause.getMessage());
         System.err.println("Error: Delete operation failed for category with ID: " + categoryId);
     }
 }

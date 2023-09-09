@@ -1,0 +1,123 @@
+package com.insurance.proxy;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.insurance.dto.Policy;
+import com.insurance.exception.NotFoundException;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+
+@FeignClient(name = "policy-service")
+public interface PolicyServiceProxy {
+
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForAddPolicy")
+	@PostMapping(value = "/policy", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public ResponseEntity<Policy> createPolicy(@RequestBody Policy policy);
+	
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForUpdatePolicy")
+	@PutMapping(value="/policy/{policyId}",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	 public ResponseEntity<String> updatePolicy(@PathVariable Long policyId, @RequestBody Policy updatedPolicy);
+
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForGetAllPolicies")
+	@GetMapping(value = "/policy", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Policy> getAllPolicies();
+
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForGetPolicyById")
+	@GetMapping(value = "/policy/{policyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Policy getPolicyById(@PathVariable("policyId") Long policyId);
+
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForGetAllPoliciesByNameLike")
+	@GetMapping(value = "/policy/name-like/{namePhrase}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Policy> getAllPoliciesByNameLike(@PathVariable("namePhrase") String namePhrase);
+
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForGetPolicyByName")
+	@GetMapping(value = "/policy/name/{policyName}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Policy getPolicyByName(@PathVariable("policyName") String policyName);
+
+	@Retry(name = "policy-category-service-retry")
+	@CircuitBreaker(name = "policy-category-service-cb", fallbackMethod = "fallbackForDeletePolicyById")
+	@DeleteMapping(value = "/policy/{policyId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void deletePolicyById(@PathVariable("policyId") Long policyId);
+	
+	//=============================FALLBACKS====================================//
+    public default ResponseEntity<Policy> fallbackForAddPolicy(Policy policy, Throwable cause) {
+    	if (cause instanceof NotFoundException) {
+            throw (NotFoundException) cause;
+        }
+    	System.out.println("Exception: => " + cause.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(new Policy(0L,"Fallback policy", BigDecimal.ZERO, BigDecimal.ZERO, 0, BigDecimal.ZERO));
+    }
+
+    public default ResponseEntity<String> fallbackForUpdatePolicy(Long policyId, Policy updatedPolicy, Throwable cause) {
+    	if (cause instanceof NotFoundException) {
+            throw (NotFoundException) cause;
+        }
+    	System.out.println("Exception: => " + cause.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Policy update failed. Fallback invoked.");
+    }
+
+    public default List<Policy> fallbackForGetAllPolicies(Throwable cause) {
+    	if (cause instanceof NotFoundException) {
+            throw (NotFoundException) cause;
+        }
+    	System.out.println("Exception: => " + cause.getMessage());
+        return Collections.emptyList();
+    }
+
+    public default Policy fallbackForGetPolicyById(Long policyId, Throwable cause) {
+    	if (cause instanceof NotFoundException) {
+            throw (NotFoundException) cause;
+        }
+    	System.out.println("Exception: => " + cause.getMessage());
+        return null;
+    }
+
+    public default List<Policy> fallbackForGetAllPoliciesByNameLike(String namePhrase, Throwable cause) {
+    	if (cause instanceof NotFoundException) {
+            throw (NotFoundException) cause;
+        }
+    	System.out.println("Exception: => " + cause.getMessage());
+        return Collections.emptyList();
+    }
+
+    public default Policy fallbackForGetPolicyByName(String policyName, Throwable cause) {
+    	if (cause instanceof NotFoundException) {
+            throw (NotFoundException) cause;
+        }
+    	System.out.println("Exception: => " + cause.getMessage());
+        return null;
+    }
+
+    public default void fallbackForDeletePolicyById(Long policyId, Throwable cause) {
+    	if (cause instanceof NotFoundException) {
+            throw (NotFoundException) cause;
+        }
+    	System.out.println("Exception: => " + cause.getMessage());
+    	 System.err.println("Error: Delete operation failed for policy with ID: " + policyId);
+    }
+}
