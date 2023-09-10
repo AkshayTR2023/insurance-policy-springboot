@@ -1,0 +1,397 @@
+Policy Categories JSON
+
+{
+ "categoryName": "Health"
+}
+{
+ "categoryName": "Life"
+}
+{
+ "categoryName": "Vehicle"
+}
+{
+ "categoryName": "Home"
+}
+
+//=============================================================//
+
+Policies JSON
+HEALTH
+  {
+  "policyName": "HealthGuard Plus",
+  "policyCoverageAmount": 500000.00,
+  "policyPremium": 7500.00,
+  "policyCoveragePeriodMonths": 24,
+  "policyCoverageLimit": 1000000.00
+ }
+
+  {
+  "policyName": "Wellness Assurance",
+  "policyCoverageAmount": 300000.00,
+  "policyPremium": 6000.00,
+  "policyCoveragePeriodMonths": 12,
+  "policyCoverageLimit": 500000.00
+}
+
+{
+  "policyName": "Family Wellness Plan",
+  "policyCoverageAmount": 800000.00,
+  "policyPremium": 9000.00,
+  "policyCoveragePeriodMonths": 36,
+  "policyCoverageLimit": 1500000.00
+}
+
+{
+  
+  "policyName": "Essential Health Coverage",
+  "policyCoverageAmount": 400000.00,
+  "policyPremium": 5500.00,
+  "policyCoveragePeriodMonths": 24,
+  "policyCoverageLimit": 700000.00
+}
+
+
+{
+  "policyName": "Comprehensive Health Care",
+  "policyCoverageAmount": 1000000.00,
+  "policyPremium": 12000.00,
+  "policyCoveragePeriodMonths": 60,
+  "policyCoverageLimit": 2000000.00
+}
+//============================================================//
+LIFE
+
+
+{
+
+  "policyName": "LifeSecure Plus",
+  "policyCoverageAmount": 1000000.00,
+  "policyPremium": 8500.00,
+  "policyCoveragePeriodMonths": 240,
+  "policyCoverageLimit": 2000000.00
+}
+
+{
+
+  "policyName": "Family Protection Plan",
+  "policyCoverageAmount": 800000.00,
+  "policyPremium": 7200.00,
+  "policyCoveragePeriodMonths": 180,
+  "policyCoverageLimit": 1500000.00
+}
+{
+  "policyName": "Education Savings Plan",
+  "policyCoverageAmount": 500000.00,
+  "policyPremium": 6000.00,
+  "policyCoveragePeriodMonths": 120,
+  "policyCoverageLimit": 1000000.00
+}
+
+
+{
+  
+  "policyName": "Retirement Assurance",
+  "policyCoverageAmount": 1000000.00,
+  "policyPremium": 10000.00,
+  "policyCoveragePeriodMonths": 720,
+  "policyCoverageLimit": 2500000.00
+}
+{
+  
+  "policyName": "Term Life Protector",
+  "policyCoverageAmount": 2000000.00,
+  "policyPremium": 15000.00,
+  "policyCoveragePeriodMonths": 120,
+  "policyCoverageLimit": 3000000.00
+}
+
+//============================================================//
+VEHICLE
+
+{
+  "policyName": "AutoShield Plus",
+  "policyCoverageAmount": 300000.00,
+  "policyPremium": 4500.00,
+  "policyCoveragePeriodMonths": 36,
+  "policyCoverageLimit": 500000.00
+}
+{
+  "policyName": "Comprehensive Vehicle Insurance",
+  "policyCoverageAmount": 600000.00,
+  "policyPremium": 7500.00,
+  "policyCoveragePeriodMonths": 60,
+  "policyCoverageLimit": 1000000.00
+}
+{
+  "policyName": "Roadside Assistance",
+  "policyCoverageAmount": 300000.00,
+  "policyPremium": 2500.00,
+  "policyCoveragePeriodMonths": 36,
+  "policyCoverageLimit": 400000.00
+}
+{
+  "policyName": "Collision Coverage",
+  "policyCoverageAmount": 1000000.00,
+  "policyPremium": 7000.00,
+  "policyCoveragePeriodMonths":24,
+  "policyCoverageLimit": 1500000.00
+}
+
+//============================================================//
+HOME
+
+{
+  "policyName": "HomeShield Plus",
+  "policyCoverageAmount": 800000.00,
+  "policyPremium": 9000.00,
+  "policyCoveragePeriodMonths": 120,
+  "policyCoverageLimit": 1500000.00
+}
+{
+  "policyName": "Comprehensive Home Insurance",
+  "policyCoverageAmount": 1000000.00,
+  "policyPremium": 12000.00,
+  "policyCoveragePeriodMonths": 240,
+  "policyCoverageLimit": 2000000.00
+}
+
+{
+  "policyName": "Flood Coverage",
+  "policyCoverageAmount": 500000.00,
+  "policyPremium": 7000.00,
+  "policyCoveragePeriodMonths": 60,
+  "policyCoverageLimit": 1000000.00
+}
+{
+  "policyName": "Homeowners' Insurance",
+  "policyCoverageAmount": 1500000.00,
+  "policyPremium": 20000.00,
+  "policyCoveragePeriodMonths": 360,
+  "policyCoverageLimit": 2000000.00
+}
+//============================================================//
+Admin JSON
+
+{
+  "adminEmail": "admin1@example.com",
+  "adminName": "Ravi Kumar",
+  "adminPassword": "admin@123"
+}
+{
+  "adminEmail": "admin2@example.com",
+  "adminName": "Priya Sharma",
+  "adminPassword": "secureAdmin1"
+}
+{
+  "adminEmail": "admin3@example.com",
+  "adminName": "Ankit Patel",
+  "adminPassword": "adminPass123"
+}
+{
+  "adminEmail": "admin4@example.com",
+  "adminName": "Neha Singh",
+  "adminPassword": "admin1234"
+}
+{
+  "adminEmail": "admin5@example.com",
+  "adminName": "Rajesh Gupta",
+  "adminPassword": "securePassword"
+}
+
+//============================================================//
+Customer JSON
+
+{
+  "customerEmail": "customer1@example.com",
+  "customerName": "Pooja Verma",
+  "customerPassword": "securePass1",
+  "customerAge": 28,
+  "customerGender": "Female",
+  "customerMobile": "+91-1234567890",
+  "customerImageUrl": "https://example.com/image1.jpg"
+}
+{
+  "customerEmail": "customer2@example.com",
+  "customerName": "Suresh Reddy",
+  "customerPassword": "customerPass123",
+  "customerAge": 35,
+  "customerGender": "Male",
+  "customerMobile": "+91-9123456780",
+  "customerImageUrl": "https://example.com/image2.jpg"
+}
+{
+  "customerEmail": "customer3@example.com",
+  "customerName": "Deepika Joshi",
+  "customerPassword": "passCust45",
+  "customerAge": 22,
+  "customerGender": "Female",
+  "customerMobile": "+91-8912345670",
+  "customerImageUrl": "https://example.com/image3.jpg"
+}
+{
+  "customerEmail": "customer4@example.com",
+  "customerName": "Sanjay Tiwari",
+  "customerPassword": "secureCustomer",
+  "customerAge": 45,
+  "customerGender": "Male",
+  "customerMobile": "+91-7891234560",
+  "customerImageUrl": "https://example.com/image4.jpg"
+}
+{
+  "customerEmail": "customer5@example.com",
+  "customerName": "Meera Mehta",
+  "customerPassword": "mypwd123",
+  "customerAge": 54,
+  "customerGender": "Female",
+  "customerMobile": "+91-6789123450",
+  "customerImageUrl": "https://example.com/image5.jpg"
+}
+
+
+//============================================================//
+Address JSON
+
+  {
+    "streetAddress": "123, Main Street",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "postalCode": "400001",
+    "country": "India"
+  }
+  {
+    "streetAddress": "456, Park Avenue",
+    "city": "Delhi",
+    "state": "Delhi",
+    "postalCode": "110001",
+    "country": "India"
+  }
+  {
+    "streetAddress": "789, Lake Road",
+    "city": "Bangalore",
+    "state": "Karnataka",
+    "postalCode": "560001",
+    "country": "India"
+  }
+  {
+    "streetAddress": "101, Hillside Lane",
+    "city": "Chennai",
+    "state": "Tamil Nadu",
+    "postalCode": "600001",
+    "country": "India"
+  }
+  {
+    "streetAddress": "222, River View",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "postalCode": "700001",
+    "country": "India"
+  }
+
+//============================================================//
+Questions JSON
+
+  {
+    "question": "What is the coverage period for my auto insurance policy?",
+    "answer": "Your auto insurance policy provides coverage for 12 months from the date of issuance.",
+    "customerId": 1
+  }
+  {
+    "question": "Can I add additional coverage to my home insurance policy?",
+    "answer": "Yes, you can customize your home insurance policy with additional coverage options.",
+    "customerId": 1
+  }
+  {
+    "question": "How do I file a claim for my health insurance policy?",
+    "answer": "To file a health insurance claim, please contact our customer support.",
+    "customerId": 1
+  }
+  {
+    "question": "What is the premium amount for my life insurance policy?",
+    "answer": "Your life insurance premium is ₹10,000 per year.",
+    "customerId": 2
+  }
+  {
+    "question": "Are there any discounts available for my policy?",
+    "answer": "We offer various discounts based on your policy type and eligibility.",
+    "customerId": 3
+  }
+  {
+    "question": "Can I change my contact details on the policy?",
+    "answer": "Yes, you can update your contact details through our online portal.",
+    "customerId": 3
+  }
+  {
+    "question": "Is my policy eligible for renewal?",
+    "answer": "Most policies are eligible for renewal, but it depends on the policy terms.",
+    "customerId": 4
+  }
+  {
+    "question": "How do I cancel my policy?",
+    "answer": "To cancel your policy, please contact our customer service team.",
+    "customerId": 4
+  }
+  {
+    "question": "What happens if I miss a premium payment?",
+    "answer": "Missing a premium payment may lead to policy lapse. Contact us for options.",
+    "customerId": 5
+  }
+  {
+    "question": "What is the maximum coverage limit for my policy?",
+    "answer": "The maximum coverage limit for your policy is Rs. 1,000,000.",
+    "customerId": 5
+  }
+//============================================================//
+Contact Form JSON
+
+
+
+  {
+    "fullName": "Amit Kumar",
+    "email": "amit@example.com",
+    "message": "I have a question about your services."
+  }
+  {
+    "fullName": "Neha Sharma",
+    "email": "neha@example.com",
+    "message": "Please provide more information about your policies."
+  }
+  {
+    "fullName": "Rajesh Verma",
+    "email": "rajesh@example.com",
+    "message": "I'm interested in insurance coverage."
+  }
+  {
+    "fullName": "Priya Gupta",
+    "email": "priya@example.com",
+    "message": "Can you send me a quote for auto insurance?"
+  }
+  {
+    "fullName": "Aman Kapoor",
+    "email": "aman@example.com",
+    "message": "I have a claim to report for my policy."
+  }
+  {
+    "fullName": "Sneha Singh",
+    "email": "sneha@example.com",
+    "message": "What are your contact details?"
+  }
+  {
+    "fullName": "Amit Kumar",
+    "email": "amit@example.com",
+    "message": "I need assistance with my policy."
+  }
+  {
+    "fullName": "Rahul Khanna",
+    "email": "rahul@example.com",
+    "message": "Please explain your coverage options."
+  }
+  {
+    "fullName": "Kavita Sharma",
+    "email": "kavita@example.com",
+    "message": "Can I get a quote for home insurance?"
+  }
+  {
+    "fullName": "Sanjay Patel",
+    "email": "sanjay@example.com",
+    "message": "What is the claim process for health insurance?"
+  }
