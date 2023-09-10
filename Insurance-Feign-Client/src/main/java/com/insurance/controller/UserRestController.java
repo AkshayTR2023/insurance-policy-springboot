@@ -20,10 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.insurance.dto.Address;
+import com.insurance.dto.AppliedPolicyWithCustomer;
+import com.insurance.dto.ContactForm;
 import com.insurance.dto.Customer;
 import com.insurance.dto.CustomerWithAddress;
+import com.insurance.dto.IssuePolicy;
 import com.insurance.dto.Policy;
 import com.insurance.dto.PolicyCategory;
+import com.insurance.dto.PolicyHistory;
+import com.insurance.dto.Question;
 import com.insurance.proxy.AddressServiceProxy;
 import com.insurance.proxy.AdminServiceProxy;
 import com.insurance.proxy.ContactFormServiceProxy;
@@ -57,17 +62,20 @@ public class UserRestController {
 	// ==============================POST=================================//
 	@PostMapping(value = "/customer/register")
 	public ResponseEntity<Customer> registerCustomer(@RequestBody Customer customer) {
+		log.debug("inside registerCustomer");
 		return customerServiceProxy.registerCustomer(customer);
 	}
 
 	@PostMapping(value = "/customer/login")
 	public ResponseEntity<Customer> checkCustomerLogin(@RequestBody Customer customer) {
+		log.debug("inside checkCustomerLogin");
 		return customerServiceProxy.customerLoginCheck(customer);
 	}
 
 	@PostMapping(value = "/customer/add-address/{customerId}")
 	public ResponseEntity<CustomerWithAddress> addCustomerAddress(@PathVariable("customerId") Long customerId,
 			@RequestBody Address address) {
+		log.debug("inside addCustomerAddress");
 		Address addedAddress = addressServiceProxy.addAddress(customerId, address).getBody();
 		Customer customer = customerServiceProxy.getCustomerById(customerId).getBody();
 		if (addedAddress != null)
@@ -79,6 +87,7 @@ public class UserRestController {
 	@PutMapping(value = "/customer/{customerId}")
 	public ResponseEntity<CustomerWithAddress> updateCustomer(@PathVariable("customerId") Long customerId,
 			@RequestBody CustomerWithAddress customerWithAddress) {
+		log.debug("inside updateCustomer");
 		Customer customer = customerServiceProxy
 				.updateCustomer(customerId,
 						new Customer(customerId, customerWithAddress.getCustomerEmail(),
@@ -92,23 +101,28 @@ public class UserRestController {
 			return new ResponseEntity<>(new CustomerWithAddress(customer, address), HttpStatus.OK);
 		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 	}
+
 	// ==============================GET=================================//
-	@GetMapping(value="/customer/{customerId}")
-	public ResponseEntity<Customer> getBasicCustomerDetails(@PathVariable("customerId")Long customerId){
+	@GetMapping(value = "/customer/{customerId}")
+	public ResponseEntity<Customer> getBasicCustomerDetails(@PathVariable("customerId") Long customerId) {
+		log.debug("inside getBasicCustomerDetails");
 		return customerServiceProxy.getCustomerById(customerId);
 	}
-	
-	@GetMapping(value="/customer/details-with-address/{customerId}")
-	public ResponseEntity<CustomerWithAddress> getCustomerDetailsWithAddress(@PathVariable("customerId")Long customerId){
-		Customer customer =customerServiceProxy.getCustomerById(customerId).getBody();
-		Address address=addressServiceProxy.getAddressById(customerId).getBody();
+
+	@GetMapping(value = "/customer/details-with-address/{customerId}")
+	public ResponseEntity<CustomerWithAddress> getCustomerDetailsWithAddress(
+			@PathVariable("customerId") Long customerId) {
+		log.debug("inside getCustomerDetailsWithAddress");
+		Customer customer = customerServiceProxy.getCustomerById(customerId).getBody();
+		Address address = addressServiceProxy.getAddressById(customerId).getBody();
 		if (address != null && customer != null)
 			return new ResponseEntity<>(new CustomerWithAddress(customer, address), HttpStatus.OK);
 		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		
+
 	}
-	// =============================POLICY CATEGORIES & POLICIES======================================//
-	//========================GET CATEGORIES=========================================================//
+
+	// =============POLICY CATEGORIES & POLICIES============================//
+	// ================GET CATEGORIES===========================================//
 	@GetMapping(value = "/category")
 	public List<PolicyCategory> getAllCategories() {
 		log.debug("inside getAllCategoriesCategory");
@@ -132,8 +146,8 @@ public class UserRestController {
 		log.debug("inside getCategoryByName");
 		return categoryServiceProxy.getCategoryByName(categoryName);
 	}
-	
-	//========================GET POLICIES=========================================================//
+
+	// ====================GET POLICIES=========================//
 	@GetMapping(value = "/policy")
 	public List<Policy> getAllPolicies() {
 		log.debug("inside getAllPolicies");
@@ -157,20 +171,65 @@ public class UserRestController {
 		log.debug("inside getPolicyByName");
 		return policyServiceProxy.getPolicyByName(policyName);
 	}
-	@GetMapping(value="/policy/by-category/{categoryId}")
+
+	@GetMapping(value = "/policy/by-category/{categoryId}")
 	public List<Policy> getPoliciesByCategory(@PathVariable("categoryId") Long categoryId) {
 		log.debug("inside getPoliciesByCategory");
-		PolicyCategory category= categoryServiceProxy.getCategoryById(categoryId).getBody();
-		List<Long> policyIds=category.getPolicyIds();
-		
+		PolicyCategory category = categoryServiceProxy.getCategoryById(categoryId).getBody();
+		List<Long> policyIds = category.getPolicyIds();
+
 		List<Policy> policies = new ArrayList<>();
-		
-		for(Long policyId : policyIds) {
+
+		for (Long policyId : policyIds) {
 			Policy policy = policyServiceProxy.getPolicyById(policyId);
 			policies.add(policy);
 		}
 		return policies;
 	}
-	//============================APPLY FOR A POLICY==================================//
-	//@PostMapping(value="/policy/apply/{policyId}/")
+
+	// ==============APPLY & VIEW APPLIED POLICIES=====================//
+	@PostMapping(value = "/policy/apply/{policyId}/{customerId}")
+	public ResponseEntity<AppliedPolicyWithCustomer> applyPolicy(@PathVariable("policyId") Long policyId,
+			@PathVariable("customerId") Long customerId) {
+		log.debug("inside applyPolicy: policyId: " + policyId + " customerId: " + customerId);
+		IssuePolicy issuedPolicy = policyServiceProxy.addIssuedPolicy(policyId, customerId).getBody();
+		Customer customer = customerServiceProxy.getCustomerById(customerId).getBody();
+		if (issuedPolicy != null && customer != null)
+			return new ResponseEntity<>(new AppliedPolicyWithCustomer(issuedPolicy, customer), HttpStatus.CREATED);
+		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping(value = "/policy/applied-policies/{customerId}")
+	public ResponseEntity<List<PolicyHistory>> policyHistory(@PathVariable("customerId") Long customerId) {
+		log.debug("inside policyHistory");
+		List<IssuePolicy> issuedPolicies = policyServiceProxy.getIssuedPoliciesByCustomerId(customerId);
+		List<PolicyHistory> policyHistoryList = new ArrayList<>();
+		for (IssuePolicy issuedPolicy : issuedPolicies) {
+			Policy policy = policyServiceProxy.getPolicyById(issuedPolicy.getPolicyId());
+			PolicyCategory category = categoryServiceProxy.getCategoryByPolicyId(issuedPolicy.getPolicyId());
+			policyHistoryList.add(new PolicyHistory(policy, issuedPolicy, category));
+		}
+		return new ResponseEntity<>(policyHistoryList, HttpStatus.OK);
+	}
+
+	// ==============================QUESTIONS=====================================//
+	@PostMapping(value = "/question")
+	public ResponseEntity<Question> askQuestion(@RequestBody Question question) {
+		log.debug("inside askQuestion");
+		return new ResponseEntity<>(questionServiceProxy.addQuestion(question), HttpStatus.CREATED);
+	}
+
+	@GetMapping(value = "/question/customer-id/{customerId}")
+	public List<Question> questionHistory(@PathVariable("customerId") Long customerId) {
+		log.debug("inside questionHistory");
+		return questionServiceProxy.getAllQuestionsByCustomerId(customerId);
+	}
+
+	// =========================CONTACT FORM================================//
+
+	@PostMapping(value = "/contact-form")
+	public ContactForm addContactForm(@RequestBody ContactForm contactForm) {
+		log.debug("inside addContactForm");
+		return contactFormServiceProxy.addContactForm(contactForm);
+	}
 }

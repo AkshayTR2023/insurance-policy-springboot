@@ -39,9 +39,9 @@ public class IssuePolicyController {
 	}
 
 	// ==============================PUT=================================//
-	@PutMapping(value="/{policyId}/{customerId}/{status}",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value="/{policyId}/{customerId}/{status}",produces = MediaType.APPLICATION_JSON_VALUE)
 	 public ResponseEntity<IssuePolicy> updatePolicyStatus(@PathVariable("policyId") Long policyId, @PathVariable("customerId") Long customerId,@PathVariable("status") int status) {
-		IssuePolicy updatedIssuedPolicy = issuePolicyService.updateIssuedPolicyStatus(policyId, policyId, status);
+		IssuePolicy updatedIssuedPolicy = issuePolicyService.updateIssuedPolicyStatus(policyId, customerId, status);
 	        if (updatedIssuedPolicy != null) {
 	            return new ResponseEntity<>(updatedIssuedPolicy, HttpStatus.OK);
 	        } else {

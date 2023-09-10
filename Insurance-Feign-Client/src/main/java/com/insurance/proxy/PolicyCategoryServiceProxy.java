@@ -66,6 +66,11 @@ public interface PolicyCategoryServiceProxy {
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetCategoryByName")
     @GetMapping(value = "/category/name/{categoryName}", produces = MediaType.APPLICATION_JSON_VALUE)
     PolicyCategory getCategoryByName(@PathVariable("categoryName") String categoryName);
+	
+	@Retry(name = "insurance-feign-retry")
+	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetCategoryByPolicyId")
+    @GetMapping(value = "/category/policy-id/{policyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    PolicyCategory getCategoryByPolicyId(@PathVariable("policyId") Long policyId);
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForDeleteCategoryById")
@@ -133,6 +138,14 @@ public interface PolicyCategoryServiceProxy {
     }
 
    
+    public default PolicyCategory fallbackForGetCategoryByPolicyId(Long policyId, Throwable cause) {
+    	if (cause instanceof NotFoundException) {
+            throw (NotFoundException) cause;
+        }
+    	System.err.println("Exception: => " + cause.getMessage());
+        return new PolicyCategory(0L, "Default Category", Collections.emptyList());
+    }
+
     public default PolicyCategory fallbackForGetCategoryByName(String categoryName, Throwable cause) {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;
@@ -141,7 +154,6 @@ public interface PolicyCategoryServiceProxy {
         return new PolicyCategory(0L, categoryName, Collections.emptyList());
     }
 
-  
     public default void fallbackForDeleteCategoryById(Long categoryId, Throwable cause) {
     	if (cause instanceof NotFoundException) {
             throw (NotFoundException) cause;

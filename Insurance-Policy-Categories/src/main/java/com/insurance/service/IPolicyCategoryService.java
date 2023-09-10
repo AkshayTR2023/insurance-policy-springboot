@@ -17,6 +17,6 @@ public interface IPolicyCategoryService {
 	public List<PolicyCategory> getAllCategoriesByNameLike(String namePhrase);
 	public PolicyCategory getCategoryById(Long categoryId);
 	public PolicyCategory getCategoryByName(String name);
-	
+	public PolicyCategory getCategoryByPolicyId(Long policyId);
 	public void deleteCategoryById(Long id);
 }

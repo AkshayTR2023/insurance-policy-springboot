@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -165,7 +166,10 @@ public class AdminRestController {
 	public ResponseEntity<Policy> createPolicy(@PathVariable("categoryId") Long categoryId,
 			@RequestBody Policy policy) {
 		log.debug("inside addPolicy");
-		return policyServiceProxy.createPolicy(policy);
+
+		Policy createdPolicy = policyServiceProxy.createPolicy(policy).getBody();
+		categoryServiceProxy.addPolicyIdToCategory(categoryId, createdPolicy.getPolicyId());
+		return new ResponseEntity<>(createdPolicy, HttpStatus.CREATED);
 	}
 
 	// ==============================PUT=================================//
@@ -200,15 +204,15 @@ public class AdminRestController {
 		return policyServiceProxy.getPolicyByName(policyName);
 	}
 
-	@GetMapping(value="/policy/by-category/{categoryId}")
+	@GetMapping(value = "/policy/by-category/{categoryId}")
 	public List<Policy> getPoliciesByCategory(@PathVariable("categoryId") Long categoryId) {
 		log.debug("inside getPoliciesByCategory");
-		PolicyCategory category= categoryServiceProxy.getCategoryById(categoryId).getBody();
-		List<Long> policyIds=category.getPolicyIds();
-		
+		PolicyCategory category = categoryServiceProxy.getCategoryById(categoryId).getBody();
+		List<Long> policyIds = category.getPolicyIds();
+
 		List<Policy> policies = new ArrayList<>();
-		
-		for(Long policyId : policyIds) {
+
+		for (Long policyId : policyIds) {
 			Policy policy = policyServiceProxy.getPolicyById(policyId);
 			policies.add(policy);
 		}
@@ -219,6 +223,7 @@ public class AdminRestController {
 	@DeleteMapping(value = "/policy/{policyId}")
 	public void deletePolicyById(@PathVariable("policyId") Long policyId) {
 		log.debug("inside deletePolicyById");
+		categoryServiceProxy.removePolicyIdFromCategories(policyId);
 		policyServiceProxy.deleteIssuedPolicyByPolicyId(policyId);
 		policyServiceProxy.deletePolicyById(policyId);
 	}
@@ -262,8 +267,14 @@ public class AdminRestController {
 	}
 
 	@GetMapping(value = "/customer")
-	public List<CustomerWithAddress> getAllCustomers() {
+	public List<Customer> getAllCustomers() {
 		log.debug("inside getAllCustomers");
+		return customerServiceProxy.getAllCustomers();
+	}
+
+	@GetMapping(value = "/customer/with-address")
+	public List<CustomerWithAddress> getAllCustomersWithAddress() {
+		log.debug("inside getAllCustomersWithAddress");
 		List<Customer> customers = customerServiceProxy.getAllCustomers();
 		List<Address> addresses = addressServiceProxy.getAllAddresses();
 
@@ -290,7 +301,7 @@ public class AdminRestController {
 	}
 
 	// ==============================DEL=================================//
-	@GetMapping(value = "/customer/{customerId")
+	@DeleteMapping(value = "/customer/{customerId}")
 	public ResponseEntity<Void> deleteCustomerById(@PathVariable("customerId") Long customerId) {
 		log.debug("inside deleteCustomerById");
 		addressServiceProxy.deleteAddressById(customerId);
@@ -304,10 +315,13 @@ public class AdminRestController {
 	public AppliedPolicyWithCustomer setAppliedPolicyStatus(
 			@RequestBody AppliedPolicyWithCustomer appliedPolicyWithCustomer) {
 		log.debug("inside setAppliedPolicyStatus");
-		IssuePolicy updatedIssuePolicy = policyServiceProxy
-				.updatePolicyStatus(appliedPolicyWithCustomer.getIssuePolicyId(),
-						appliedPolicyWithCustomer.getCustomerId(), appliedPolicyWithCustomer.getPolicyStatus())
-				.getBody();
+		int status = 0;
+		if (appliedPolicyWithCustomer.getPolicyStatus().equals("APPROVED"))
+			status = 1;
+		else if (appliedPolicyWithCustomer.getPolicyStatus().equals("DISAPPROVED"))
+			status = 2;
+		IssuePolicy updatedIssuePolicy = policyServiceProxy.updatePolicyStatus(appliedPolicyWithCustomer.getPolicyId(),
+				appliedPolicyWithCustomer.getCustomerId(), status).getBody();
 		Customer customer = customerServiceProxy.getCustomerById(appliedPolicyWithCustomer.getCustomerId()).getBody();
 		return new AppliedPolicyWithCustomer(updatedIssuePolicy, customer);
 	}
@@ -417,7 +431,7 @@ public class AdminRestController {
 		return questionsWithCustomers;
 	}
 
-	@GetMapping(value = "/question/{customerId}")
+	@GetMapping(value = "/question/customer-id/{customerId}")
 	public List<QuestionWithCustomer> getAllQuestionsByCustomerId(@PathVariable("customerId") Long CustomerId) {
 		log.debug("inside getAllQuestionsByCustomerId");
 		List<Question> questions = questionServiceProxy.getAllQuestionsByCustomerId(CustomerId);

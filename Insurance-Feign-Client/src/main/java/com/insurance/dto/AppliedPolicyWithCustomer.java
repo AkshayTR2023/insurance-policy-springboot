@@ -14,7 +14,7 @@ public class AppliedPolicyWithCustomer {
 	private Long customerId;
 
 	private LocalDateTime policyDateTime;
-	private int policyStatus;
+	private String policyStatus;
 
 	private Customer customer;
 
@@ -23,7 +23,12 @@ public class AppliedPolicyWithCustomer {
 		this.policyId = issuePolicy.getPolicyId();
 		this.customerId = issuePolicy.getCustomerId();
 		this.policyDateTime = issuePolicy.getPolicyDateTime();
-		this.policyStatus = issuePolicy.getPolicyStatus();
+		if(issuePolicy.getPolicyStatus()==0)
+			this.policyStatus="PENDING";
+		else if(issuePolicy.getPolicyStatus()==1)
+			this.policyStatus="APPROVED";
+		else
+			this.policyStatus="DISAPPROVED";
 		this.customer = customer;
 	}
 

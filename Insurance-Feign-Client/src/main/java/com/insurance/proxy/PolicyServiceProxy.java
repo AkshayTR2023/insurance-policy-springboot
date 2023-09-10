@@ -77,7 +77,7 @@ public interface PolicyServiceProxy {
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForUpdatePolicyStatus")
-	@PutMapping(value = "/issue-policy/{policyId}/{customerId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/issue-policy/{policyId}/{customerId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<IssuePolicy> updatePolicyStatus(@PathVariable("policyId") Long policyId,
 			@PathVariable("customerId") Long customerId, @PathVariable("status") int status);
 

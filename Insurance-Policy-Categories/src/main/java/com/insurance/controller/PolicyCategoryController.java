@@ -94,6 +94,11 @@ public class PolicyCategoryController {
 	public PolicyCategory getCategoryByName(@PathVariable("categoryName") String categoryName) {
 		return categoryService.getCategoryByName(categoryName);
 	}
+	
+	@GetMapping(value = "/policy-id/{policyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public PolicyCategory getCategoryByPolicyId(@PathVariable("policyId") Long policyId) {
+		return categoryService.getCategoryByPolicyId(policyId);
+	}
 	// ==============================DEL=================================//
 
 	@DeleteMapping(value = "/{categoryId}")

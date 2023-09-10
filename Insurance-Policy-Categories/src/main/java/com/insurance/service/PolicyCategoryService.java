@@ -80,4 +80,14 @@ public class PolicyCategoryService implements IPolicyCategoryService {
 
 	}
 
+	@Override
+	public PolicyCategory getCategoryByPolicyId(Long policyId) {
+		List<PolicyCategory> categories = policyCategoryRepository.findByPolicyIdsContaining(policyId);
+		for (PolicyCategory category : categories) {
+			if (category != null)
+				return category;
+		}
+		return null;
+	}
+
 }
