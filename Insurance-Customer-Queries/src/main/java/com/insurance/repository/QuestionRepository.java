@@ -12,6 +12,6 @@ import com.insurance.entity.Question;
 @Scope(value = "singleton")
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-	List<Question> findByUsername(String username);
+	List<Question> findByCustomerId(Long customerId);
 
 }

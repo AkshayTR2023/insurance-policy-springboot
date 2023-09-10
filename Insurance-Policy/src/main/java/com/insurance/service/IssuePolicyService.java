@@ -2,7 +2,6 @@ package com.insurance.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,19 +20,19 @@ public class IssuePolicyService implements IIssuePolicyService {
 	private IssuePolicyRepository issuePolicyRepository;
 
 	@Override
-	public IssuePolicy addIssuedPolicy(Long policyId, Long userId) {
+	public IssuePolicy addIssuedPolicy(Long policyId, Long customerId) {
 		IssuePolicy newIssuePolicy = new IssuePolicy();
 		newIssuePolicy.setPolicyDateTime(LocalDateTime.now());
 		newIssuePolicy.setPolicyId(policyId);
-		newIssuePolicy.setUserId(userId);
+		newIssuePolicy.setCustomerId(customerId);
 		newIssuePolicy.setPolicyStatus(0);
 
 		return issuePolicyRepository.save(newIssuePolicy);
 	}
 
 	@Override
-	public IssuePolicy updateIssuedPolicyStatus(Long policyId, Long userId, int status) {
-		IssuePolicy existingPolicy = issuePolicyRepository.findByPolicyIdAndUserId(policyId, userId);
+	public IssuePolicy updateIssuedPolicyStatus(Long policyId, Long customerId, int status) {
+		IssuePolicy existingPolicy = issuePolicyRepository.findByPolicyIdAndCustomerId(policyId, customerId);
 		if (existingPolicy != null) {
 			existingPolicy.setPolicyStatus(status);
 			return issuePolicyRepository.save(existingPolicy);
@@ -47,8 +46,8 @@ public class IssuePolicyService implements IIssuePolicyService {
 	}
 
 	@Override
-	public List<IssuePolicy> getIssuedPoliciesByUserId(Long userId) {
-		return issuePolicyRepository.findByUserId(userId);
+	public List<IssuePolicy> getIssuedPoliciesByCustomerId(Long customerId) {
+		return issuePolicyRepository.findByCustomerId(customerId);
 	}
 
 	@Override
@@ -65,6 +64,18 @@ public class IssuePolicyService implements IIssuePolicyService {
 	public void deleteIssuedPolicy(Long issuePolicyId) {
 		issuePolicyRepository.deleteById(issuePolicyId);
 
+	}
+
+	@Override
+	public void deleteIssuedPolicyByCustomerId(Long customerId) {
+		issuePolicyRepository.deleteByCustomerId(customerId);
+		
+	}
+
+	@Override
+	public void deleteIssuedPolicyByPolicyId(Long policyId) {
+		issuePolicyRepository.deleteByPolicyId(policyId);
+		
 	}
 
 }

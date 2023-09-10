@@ -33,10 +33,10 @@ public class AddressController {
 	private IAddressService addressService;
 
 	// ==============================POST=================================//
-	@PostMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ResponseEntity<Address> addAddress(@PathVariable("userId") Long userId, @RequestBody Address address) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(addressService.addAddress(userId, address));
+	public ResponseEntity<Address> addAddress(@PathVariable("customerId") Long customerId, @RequestBody Address address) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(addressService.addAddress(customerId, address));
 	}
 
 	// ==============================PUT=================================//

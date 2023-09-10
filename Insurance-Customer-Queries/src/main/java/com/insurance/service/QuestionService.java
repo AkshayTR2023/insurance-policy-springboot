@@ -35,8 +35,8 @@ public class QuestionService implements IQuestionService {
 	}
 
 	@Override
-	public List<Question> getQuestionsByUsername(String username) {
-		return questionRepository.findByUsername(username);
+	public List<Question> getQuestionsByCustomerId(Long customerId) {
+		return questionRepository.findByCustomerId(customerId);
 	}
 
 	@Override

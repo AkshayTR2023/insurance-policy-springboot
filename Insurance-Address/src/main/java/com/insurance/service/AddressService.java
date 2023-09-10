@@ -19,8 +19,8 @@ public class AddressService implements IAddressService {
 	private AddressRepository addressRepository;
 
 	@Override
-	public Address addAddress(Long userId, Address address) {
-		address.setAddressId(userId);
+	public Address addAddress(Long customerId, Address address) {
+		address.setAddressId(customerId);
 		return addressRepository.save(address);
 	}
 

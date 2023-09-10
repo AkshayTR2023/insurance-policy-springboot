@@ -41,9 +41,9 @@ public interface QuestionServiceProxy {
 	public List<Question> getAllQuestions();
 
 	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetAllQuestionsByUserId")
-	@GetMapping(value = "/question/user-id/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Question> getAllQuestionsByUserId(@PathVariable("userId") Long userId);
+	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetAllQuestionsByCustomerId")
+	@GetMapping(value = "/question/customer-id/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Question> getAllQuestionsByCustomerId(@PathVariable("customerId") Long customerId);
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetQuestionById")
@@ -77,7 +77,7 @@ public interface QuestionServiceProxy {
 		return Collections.emptyList();
 	}
 
-	public default List<Question> fallbackForGetAllQuestionsByUserId(Long userId, Throwable cause) {
+	public default List<Question> fallbackForGetAllQuestionsByCustomerId(Long customerId, Throwable cause) {
 		if (cause instanceof NotFoundException) {
 			throw (NotFoundException) cause;
 		}

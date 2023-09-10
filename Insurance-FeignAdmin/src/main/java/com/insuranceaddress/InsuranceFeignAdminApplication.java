@@ -1,15 +1,17 @@
-package com.insurance;
+package com.insuranceaddress;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class InsuranceContactFormApplication {
+@EnableFeignClients
+public class InsuranceFeignAdminApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(InsuranceContactFormApplication.class, args);
+		SpringApplication.run(InsuranceFeignAdminApplication.class, args);
 	}
 
 }

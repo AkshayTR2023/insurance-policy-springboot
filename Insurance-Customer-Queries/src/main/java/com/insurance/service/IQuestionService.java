@@ -8,7 +8,7 @@ public interface IQuestionService {
 
 	public Question addQuestion(Question question);
 	public Question addAnswer(Long questionId, Question questionWithAnswer);
-	public List<Question> getQuestionsByUsername(String username);
+	public List<Question> getQuestionsByCustomerId(Long customerId);
 	public List<Question> getAllQuestions();
 	public Question getQuestionById(Long questionId);
 	

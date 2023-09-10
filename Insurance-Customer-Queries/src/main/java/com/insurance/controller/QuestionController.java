@@ -53,9 +53,9 @@ public class QuestionController {
 		return questionService.getAllQuestions();
 	}
 
-	@GetMapping(value = "/username/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Question> getAllQuestionsByUsername(@PathVariable("username") String username) {
-		return questionService.getQuestionsByUsername(username);
+	@GetMapping(value = "/customer-id/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Question> getAllQuestionsByCustomerId(@PathVariable("customerId") Long customerId) {
+		return questionService.getQuestionsByCustomerId(customerId);
 	}
 
 	@GetMapping(value = "/{questionId}", produces = MediaType.APPLICATION_JSON_VALUE)

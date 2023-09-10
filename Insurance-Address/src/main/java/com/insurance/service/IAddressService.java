@@ -6,7 +6,7 @@ import com.insurance.entity.Address;
 
 public interface IAddressService {
 
-	public Address addAddress(Long userId, Address address);
+	public Address addAddress(Long customerId, Address address);
 	
 	public Address updateAddress(Long addressId, Address address);
 	

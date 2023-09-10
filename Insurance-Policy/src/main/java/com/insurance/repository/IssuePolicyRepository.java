@@ -13,9 +13,13 @@ import com.insurance.entity.IssuePolicy;
 @Scope(value = "singleton")
 public interface IssuePolicyRepository extends JpaRepository<IssuePolicy, Long> {
 
-	IssuePolicy findByPolicyIdAndUserId(Long policyId, Long userId);
+	IssuePolicy findByPolicyIdAndCustomerId(Long policyId, Long customerId);
 
 	List<IssuePolicy> findByPolicyId(Long policyId);
-	List<IssuePolicy> findByUserId(Long userId);
+	List<IssuePolicy> findByCustomerId(Long customerId);
+
+	void deleteByCustomerId(Long customerId);
+
+	void deleteByPolicyId(Long policyId);
 
 }

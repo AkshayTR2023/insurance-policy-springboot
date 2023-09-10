@@ -12,7 +12,7 @@ public class IssuePolicy {
 	private Long issuePolicyId;
 
 	private Long policyId;
-	private Long userId;
+	private Long customerId;
 
 	private LocalDateTime policyDateTime;
 	private int policyStatus;

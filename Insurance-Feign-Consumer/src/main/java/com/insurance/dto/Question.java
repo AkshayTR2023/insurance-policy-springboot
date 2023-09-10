@@ -11,5 +11,5 @@ public class Question {
 	private Long questionId;
 	private String question;
 	private String answer;
-	private Long userId;
+	private Long customerId;
 }

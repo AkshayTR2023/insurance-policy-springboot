@@ -26,9 +26,9 @@ public interface AddressServiceProxy {
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForAddAddress")
-	@PostMapping(value = "/address/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/address/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ResponseEntity<Address> addAddress(@PathVariable("userId") Long userId, @RequestBody Address address);
+	public ResponseEntity<Address> addAddress(@PathVariable("customerId") Long customerId, @RequestBody Address address);
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForUpdateAddress")
@@ -54,13 +54,13 @@ public interface AddressServiceProxy {
 
 	// =================================FALLBACKS=====================================//
 	
-	public default ResponseEntity<Address> fallbackForAddAddress(Long userId,Address address, Throwable cause){
+	public default ResponseEntity<Address> fallbackForAddAddress(Long customerId,Address address, Throwable cause){
 		if (cause instanceof NotFoundException) {
 			throw (NotFoundException) cause;
 		}
 		System.err.println("Exception: => " + cause.getMessage());
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(new Address(userId, "default", "default", "default", "default", "default"));
+				.body(new Address(customerId, "default", "default", "default", "default", "default"));
 	}
 	public default ResponseEntity<Address> fallbackForUpdateAddress(Long addressId,
 			Address address, Throwable cause){

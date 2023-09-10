@@ -70,16 +70,16 @@ public interface PolicyServiceProxy {
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForAddIssuedPolicy")
-	@PostMapping(value = "/issue-policy/{policyId}/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/issue-policy/{policyId}/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseEntity<IssuePolicy> addIssuedPolicy(@PathVariable("policyId") Long policyId,
-			@PathVariable("userId") Long userId);
+			@PathVariable("customerId") Long customerId);
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForUpdatePolicyStatus")
-	@PutMapping(value = "/issue-policy/{policyId}/{userId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/issue-policy/{policyId}/{customerId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<IssuePolicy> updatePolicyStatus(@PathVariable("policyId") Long policyId,
-			@PathVariable("userId") Long userId, @PathVariable("status") int status);
+			@PathVariable("customerId") Long customerId, @PathVariable("status") int status);
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetAllIssuedPolicies")
@@ -92,9 +92,9 @@ public interface PolicyServiceProxy {
 	public List<IssuePolicy> getIssuedPoliciesByPolicyId(@PathVariable("policyId") Long policyId);
 
 	@Retry(name = "insurance-feign-retry")
-	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetIssuedPoliciesByUserId")
-	@GetMapping(value = "/issue-policy/userId/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<IssuePolicy> getIssuedPoliciesByUserId(@PathVariable("userId") Long userId);
+	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetIssuedPoliciesByCustomerId")
+	@GetMapping(value = "/issue-policy/customerId/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<IssuePolicy> getIssuedPoliciesByCustomerId(@PathVariable("customerId") Long customerId);
 
 	@Retry(name = "insurance-feign-retry")
 	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForGetIssuedPolicyById")
@@ -106,6 +106,18 @@ public interface PolicyServiceProxy {
 	@DeleteMapping(value = "/issue-policy/{issuedPolicyId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void deleteIssuedPolicyById(@PathVariable("issuedPolicyId") Long issuedPolicyId);
+
+	@Retry(name = "insurance-feign-retry")
+	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForDeleteIssuedPolicyByCustomerId")
+	@DeleteMapping(value = "/issue-policy/customer-id/{customerId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void deleteIssuedPolicyByCustomerId(@PathVariable("customerId") Long customerId);
+
+	@Retry(name = "insurance-feign-retry")
+	@CircuitBreaker(name = "insurance-feign-cb", fallbackMethod = "fallbackForDeleteIssuedPolicyByPolicyId")
+	@DeleteMapping(value = "/issue-policy/policy-id/{policyId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void deleteIssuedPolicyByPolicyId(@PathVariable("policyId") Long policyId);
 
 	// =============================FALLBACKS FOR
 	// POLICY====================================//
@@ -169,7 +181,7 @@ public interface PolicyServiceProxy {
 
 	// =============================FALLBACKS FOR ISSUE
 	// POLICY====================================//
-	public default ResponseEntity<IssuePolicy> fallbackForAddIssuedPolicy(Long policyId, Long userId, Throwable cause) {
+	public default ResponseEntity<IssuePolicy> fallbackForAddIssuedPolicy(Long policyId, Long customerId, Throwable cause) {
 		if (cause instanceof NotFoundException) {
 			throw (NotFoundException) cause;
 		}
@@ -178,7 +190,7 @@ public interface PolicyServiceProxy {
 				.body(new IssuePolicy(0L, 0L, 0L, LocalDateTime.now(), 0));
 	}
 
-	public default ResponseEntity<IssuePolicy> fallbackForUpdatePolicyStatus(Long policyId, Long userId, int status,
+	public default ResponseEntity<IssuePolicy> fallbackForUpdatePolicyStatus(Long policyId, Long customerId, int status,
 			Throwable cause) {
 		if (cause instanceof NotFoundException) {
 			throw (NotFoundException) cause;
@@ -203,23 +215,40 @@ public interface PolicyServiceProxy {
 		System.err.println("Exception: => " + cause.getMessage());
 		return Collections.emptyList();
 	}
-	
-	public default List<IssuePolicy> fallbackForGetIssuedPoliciesByUserId(Long userId, Throwable cause) {
+
+	public default List<IssuePolicy> fallbackForGetIssuedPoliciesByCustomerId(Long customerId, Throwable cause) {
 		if (cause instanceof NotFoundException) {
 			throw (NotFoundException) cause;
 		}
 		System.err.println("Exception: => " + cause.getMessage());
 		return Collections.emptyList();
 	}
-	
+
 	public default IssuePolicy fallbackForGetIssuedPolicyById(Long issuedPolicyId, Throwable cause) {
 		if (cause instanceof NotFoundException) {
 			throw (NotFoundException) cause;
 		}
 		return new IssuePolicy(issuedPolicyId, 0L, 0L, LocalDateTime.now(), 0);
 	}
+
+	public default void fallbackForDeleteIssuedPolicyByCustomerId(Long customerId, Throwable cause) {
+		if (cause instanceof NotFoundException) {
+			throw (NotFoundException) cause;
+		}
+		System.err.println("Exception: => " + cause.getMessage());
+		System.err.println("Error: Delete operation failed for issued policy with customer ID: " + customerId);
+	}
 	
-	public default void fallbackForDeleteIssuedPolicyById(Long issuedPolicyId,Throwable cause) {
+	public default void fallbackForDeleteIssuedPolicyByPolicyId(Long policyId, Throwable cause) {
+		if (cause instanceof NotFoundException) {
+			throw (NotFoundException) cause;
+		}
+		System.err.println("Exception: => " + cause.getMessage());
+		System.err.println("Error: Delete operation failed for issued policy with policy ID: " + policyId);
+	}
+	
+	
+	public default void fallbackForDeleteIssuedPolicyById(Long issuedPolicyId, Throwable cause) {
 		if (cause instanceof NotFoundException) {
 			throw (NotFoundException) cause;
 		}

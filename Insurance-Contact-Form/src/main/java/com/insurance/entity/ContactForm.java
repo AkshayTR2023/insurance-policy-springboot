@@ -19,5 +19,6 @@ public class ContactForm {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long formId;
 	private String fullName;
+	private String email;
 	private String message;
 }

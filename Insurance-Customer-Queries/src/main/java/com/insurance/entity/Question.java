@@ -19,6 +19,6 @@ public class Question {
 	private Long questionId;
 	private String question;
 	private String answer;
-	private String username;
+	private Long customerId;
 }
 	

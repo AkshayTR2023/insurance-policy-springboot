@@ -31,16 +31,16 @@ public class IssuePolicyController {
 	private IIssuePolicyService issuePolicyService;
 
 	// ==============================POST=================================//
-	@PostMapping(value = "/{policyId}/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/{policyId}/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseEntity<IssuePolicy> addIssuedPolicy(@PathVariable("policyId") Long policyId,
-			@PathVariable("userId") Long userId) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(issuePolicyService.addIssuedPolicy(policyId, userId));
+			@PathVariable("customerId") Long customerId) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(issuePolicyService.addIssuedPolicy(policyId, customerId));
 	}
 
 	// ==============================PUT=================================//
-	@PutMapping(value="/{policyId}/{userId}/{status}",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	 public ResponseEntity<IssuePolicy> updatePolicyStatus(@PathVariable("policyId") Long policyId, @PathVariable("userId") Long userId,@PathVariable("status") int status) {
+	@PutMapping(value="/{policyId}/{customerId}/{status}",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	 public ResponseEntity<IssuePolicy> updatePolicyStatus(@PathVariable("policyId") Long policyId, @PathVariable("customerId") Long customerId,@PathVariable("status") int status) {
 		IssuePolicy updatedIssuedPolicy = issuePolicyService.updateIssuedPolicyStatus(policyId, policyId, status);
 	        if (updatedIssuedPolicy != null) {
 	            return new ResponseEntity<>(updatedIssuedPolicy, HttpStatus.OK);
@@ -60,9 +60,9 @@ public class IssuePolicyController {
 		return issuePolicyService.getIssuedPoliciesByPolicyId(policyId);
 	}
 
-	@GetMapping(value = "/userId/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<IssuePolicy> getIssuedPoliciesByUserId(@PathVariable("userId") Long userId) {
-		return issuePolicyService.getIssuedPoliciesByUserId(userId);
+	@GetMapping(value = "/customerId/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<IssuePolicy> getIssuedPoliciesByCustomerId(@PathVariable("customerId") Long customerId) {
+		return issuePolicyService.getIssuedPoliciesByCustomerId(customerId);
 	}
 	@GetMapping(value = "/id/{issuedPolicyId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public IssuePolicy getIssuedPolicyById(@PathVariable("issuedPolicyId") Long issuedPolicyId) {
@@ -72,7 +72,19 @@ public class IssuePolicyController {
 
 	@DeleteMapping(value = "/{issuedPolicyId}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void deletepolicyById(@PathVariable("issuedPolicyId") Long issuedPolicyId) {
+	public void deleteIssuedPolicyById(@PathVariable("issuedPolicyId") Long issuedPolicyId) {
 		issuePolicyService.deleteIssuedPolicy(issuedPolicyId);
+	}
+	
+	@DeleteMapping(value = "/customer-id/{customerId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void deleteIssuedPolicyByCustomerId(@PathVariable("customerId") Long customerId){
+		issuePolicyService.deleteIssuedPolicyByCustomerId(customerId);
+	}
+	
+	@DeleteMapping(value = "policy-id/{policyId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void deleteIssuedPolicyByPolicyId(@PathVariable("policyId") Long policyId){
+		issuePolicyService.deleteIssuedPolicyByPolicyId(policyId);
 	}
 }
